@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="listings">
+        <h2>Active Listings</h2>
+        {% for auction in auctions %}
+                <li class ="listings_item"> 
+                    <a href="{% url 'auction' auction.id %}">
+                        <div class="photo"><img src="{{auction.photoURL}}" alt="{{auction.title}}"></image></div>
+                        <div class="textBox">
+                            <div class="item_title">{{ auction.title }}</div>
+                            <div class="price">Price : ${{auction.price}}</div>
+                            starting_bids : ${{ auction.startingBids }}
+                            {% if not watching %}
+                                <a href="{% url 'update_watchlist' auction.id 'add' %}" class="btn btn-primary">Add to Watchlist</a>
+                            {% else %}
+                                <a href="{% url 'update_watchlist' auction.id 'remove' %}" class="btn btn-primary">remove from Watchlist</a>
+                            {% endif %}
+                    </a>
+                        <div class = "createdAt text-secondary"> Created At : {{auction.created_at}}</div>
+                        </div>
+                </li>
+                {% empty %}
+                <li class ="listings_item"> No listing is active</li>
+        {% endfor %}
+    </div>  
+    
+{% endblock %}

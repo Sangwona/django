@@ -34,6 +34,7 @@ def search(request):
             })
 
 def random(request):
+    print(request)
     entries = util.list_entries()
     entry = choice(entries)
     content = util.get_entry(entry)
@@ -44,7 +45,7 @@ def random(request):
 
 class NewForm(forms.Form):
     title = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control', 'id' : 'titleBox'}))
-    content = forms.CharField( required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    content = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
 
 def create(request):
     if (request.method == "POST"):

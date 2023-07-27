@@ -1,0 +1,62 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container"></div>
+    <div class="auction_page">
+        <img class="auction_photo" src="{{ auction.photoURL }}" alt="{{auction.title}} photo"></image>
+        <div class="auction_page_right">
+            
+            {% if not watching %}
+                <a href="{% url 'update_watchlist' auction.id 'add' %}" class="btn btn-primary">Add to Watchlist</a>
+            {% else %}
+                <a href="{% url 'update_watchlist' auction.id 'remove' %}" class="btn btn-primary">remove from Watchlist</a>
+            {% endif %}
+
+            
+            <div class="auction_title">Title: {{auction.title}} </div>
+            <div class="auction_current_price">Current Price : ${{auction.price}} </div>
+            <div>starting bids $ {{auction.startingBids}}</div>
+            <div class="auction_description">Description: {{auction.description}}</div>
+            
+            <div># bid(s) so far. Your bid is the current bid.</div>
+
+            {% if auction.active %}
+                {% if auction.author == user %}
+                    <a href="{% url 'close_auction' auction.id %}" class="btn btn-primary">Close Auction</a>
+                {% endif %}
+            <form class="auction_form" action="{% url 'auction' auction.id %}" method="POST">
+                {% csrf_token %}
+                {{ form }}
+                {% if message %}
+                <div class="alert alert-danger" style="margin: 20px">{{ message }}</div>
+                {% endif %}
+                <input type="submit" value="SUBMIT" class="btn btn-primary">
+            </form>
+            
+            {% else %}
+                <div>Winner is {{auction.highestbidder}} ! </div>
+            {% endif %}
+
+        </div>
+    </div>
+    
+    <div class="auction_comment">
+        <h4>Comments:</h4>
+        {% for comment in comments %}
+            <div class="comment_box">
+                <strong class="comment_user">{{ comment.user.username }}</strong>
+                <span class="comment_content">{{ comment.content }}</span>
+                <span class="comment_createdat">{{comment.created_at}}</span>
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+        
+        <form class="auction_form" action="{% url 'create_comment' auction.id %}" method="POST">
+            {% csrf_token %}
+            {{ comment_form }}
+            <input type="submit" value="Add comment" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+{% endblock %}
